@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Category_place(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,blank=True)
 
     def __str__(self):
         return self.title
@@ -35,6 +35,7 @@ class Place(models.Model):
     hours = models.TextField(blank=True)
     image = models.ImageField(blank=True)
     map_link = models.CharField(max_length=255, blank=True)
+    
 
 
 class Category_fun(models.Model):
@@ -82,4 +83,5 @@ class Hotel(models.Model):
     map_link = models.CharField(max_length=255, blank=True)
 
     
+  
     
