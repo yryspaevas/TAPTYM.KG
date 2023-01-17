@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Avg
 
 from rest_framework.viewsets import ModelViewSet
 from .serializers import *
@@ -25,7 +26,7 @@ class SubCategoryPlaceViewSet(ModelViewSet):
         return [IsAdminUser()]
 
 class PlaceViewSet(ModelViewSet):
-    queryset = Place.objects.all()
+    queryset = Place.objects.all().annotate(rating=Avg('place_rating__place_rating')).order_by('-place_rating')
     serializer_class = PlaceSerializer
     def get_permissions(self):
         if self.action in ['retrieve', 'list', 'search']:
@@ -43,7 +44,7 @@ class CategoryFunViewSet(ModelViewSet):
         return [IsAdminUser()]
 
 class FunViewSet(ModelViewSet):
-    queryset = Fun.objects.all()
+    queryset = Fun.objects.all().annotate(rating=Avg('fun_rating__fun_rating')).order_by('-fun_rating')
     serializer_class = FunSerializer
     def get_permissions(self):
         if self.action in ['retrieve', 'list', 'search']:
@@ -61,7 +62,7 @@ class CategoryHotelViewSet(ModelViewSet):
         return [IsAdminUser()]
 
 class HotelViewSet(ModelViewSet):
-    queryset = Hotel.objects.all()
+    queryset = Hotel.objects.all().annotate(rating=Avg('hotel_rating__hotel_rating')).order_by('-hotel_rating')
     serializer_class = HotelSerializer
     def get_permissions(self):
         if self.action in ['retrieve', 'list', 'search']:
