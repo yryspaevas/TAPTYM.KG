@@ -33,7 +33,7 @@ class Place(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='place', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
 
 
@@ -59,7 +59,7 @@ class Fun(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='fun', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
 
     class Meta:
@@ -85,7 +85,7 @@ class Hotel(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='hotel', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
 
     class Meta:
