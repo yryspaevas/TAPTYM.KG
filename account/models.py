@@ -50,7 +50,7 @@ class User(AbstractUser):
 
    
     def password_confirm(self):
-        activation_url = f'http://127.0.0.1:8000/account/password_confirm/{self.activation_code}'
+        activation_url = f'http://34.123.240.158/account/password_confirm/{self.activation_code}'
         message = f"""
         Do you want to change password?
         Confirm password changes: {activation_url}
