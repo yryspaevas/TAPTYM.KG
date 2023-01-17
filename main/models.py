@@ -33,10 +33,14 @@ class Place(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='place', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
     
 
+
+    class Meta:
+        verbose_name = "Еда"
+        verbose_name_plural = "Еда"
 
 class Category_fun(models.Model):
     
@@ -56,9 +60,12 @@ class Fun(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='fun', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
 
+    class Meta:
+        verbose_name = "Развлечение"
+        verbose_name_plural = "Развлечения"
 
 
 class Category_hotel(models.Model):
@@ -79,9 +86,10 @@ class Hotel(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
-    map_link = models.CharField(max_length=255, blank=True)
-
+    image = models.ImageField(upload_to='hotel', blank=True)
+    map_link = models.CharField(max_length=255, blank=True
     
-  
-    
+    class Meta:
+        verbose_name = "Размещение"
+        verbose_name_plural = "Размещение"
+        
