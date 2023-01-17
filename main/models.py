@@ -87,7 +87,7 @@ class Hotel(models.Model):
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
     image = models.ImageField(upload_to='hotel', blank=True)
-    map_link = models.CharField(max_length=255, blank=True
+    map_link = models.CharField(max_length=255, blank=True)
     
     class Meta:
         verbose_name = "Размещение"
