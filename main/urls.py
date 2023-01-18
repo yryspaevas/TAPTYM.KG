@@ -14,5 +14,5 @@ router.register('hotel', HotelViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    # path('search/', search),
+    path('search/', poisk),
 ]
