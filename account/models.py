@@ -44,11 +44,26 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+    def __str__(self):
+        return self.email
 
     def create_activation_code(self):
         self.activation_code = get_random_string(8, 'qwertyuiopasdfghjklzxcvbnm123456789')
 
-   
+    @staticmethod
+    def generate_activation_code():
+        from django.utils.crypto import get_random_string
+        code = get_random_string(8)
+        return code 
+
+    def set_activation_code(self):
+        code = self.generate_activation_code()
+        if User.objects.filter(activation_code=code).exists():
+            self.set_activation_code()
+        else:
+            self.activation_code = code
+            self.save()
+
     def password_confirm(self):
         activation_url = f'http://34.123.240.158/account/password_confirm/{self.activation_code}'
         message = f"""
