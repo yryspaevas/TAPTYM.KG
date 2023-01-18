@@ -13,7 +13,8 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.db.models import Q
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
+from rest_framework.pagination import PageNumberPagination
 
 
 
@@ -124,4 +125,24 @@ class HotelViewSet(ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=200)
-    
+
+
+
+@api_view(['GET'])
+def poisk(request):
+    q = request.query_params.get('q')
+    queryset1 = Fun.objects.filter(Q(name__icontains=q) | Q(info__icontains=q))
+    queryset2 = Place.objects.filter(Q(name__icontains=q) | Q(info__icontains=q))
+    queryset3 = Hotel.objects.filter(Q(name__icontains=q) | Q(info__icontains=q))
+    res = []
+    res.extend(FunSerializer(queryset1, many=True).data)
+    res.extend(PlaceSerializer(queryset2, many=True).data)
+    res.extend(HotelSerializer(queryset3, many=True).data)
+
+    paginator = PageNumberPagination()
+    pagination = paginator.paginate_queryset(res, request)
+    if pagination:
+        return paginator.get_paginated_response(pagination)
+    return Response(res)
+
+
