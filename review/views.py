@@ -10,6 +10,7 @@ from .serializers import *
 class PlaceCommentViewSet(ModelViewSet):
     queryset = PlaceComment.objects.all()
     serializer_class = PlaceCommentSerializer
+    
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
             return [IsAuthenticatedOrReadOnly()]
