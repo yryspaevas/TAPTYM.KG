@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 
 from .serializers import *
+from .paginations import HotelCommentPagination,FunCommentPagination, PlaceCommentPagination
+# from main.views import HotelViewSet
+# from main.serializers import HotelSerializer
 
 # Create your views here.
 
@@ -10,6 +13,7 @@ from .serializers import *
 class PlaceCommentViewSet(ModelViewSet):
     queryset = PlaceComment.objects.all()
     serializer_class = PlaceCommentSerializer
+    pagination_class = PlaceCommentPagination
     
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
@@ -24,6 +28,7 @@ class PlaceCommentViewSet(ModelViewSet):
 class FunCommentViewSet(ModelViewSet):
     queryset = FunComment.objects.all()
     serializer_class = FunCommentSerializer
+    pagination_class = FunCommentPagination
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
             return [IsAuthenticatedOrReadOnly()]
@@ -37,6 +42,7 @@ class FunCommentViewSet(ModelViewSet):
 class HotelCommentViewSet(ModelViewSet):
     queryset = HotelComment.objects.all()
     serializer_class = HotelCommentSerializer
+    pagination_class = HotelCommentPagination
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
             return [IsAuthenticatedOrReadOnly()]
@@ -46,6 +52,7 @@ class HotelCommentViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+
 
 class FavoritePlaceViewSet(ModelViewSet):
     queryset = FavoritePlace.objects.all()

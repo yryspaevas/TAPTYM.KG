@@ -1,18 +1,18 @@
 from django.shortcuts import render
 from django.db.models import Avg
+from django.db.models import Count
 
 from rest_framework.viewsets import ModelViewSet
 from .serializers import *
 from .models import *
 from rest_framework.permissions import IsAdminUser
+# from .paginations import HotelPagination
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
 from rest_framework.pagination import PageNumberPagination
-
-
 
 
 class CategoryPlaceViewSet(ModelViewSet):
@@ -41,6 +41,10 @@ class PlaceViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+    @action(['GET'], detail=False)
+    def top_three(self, request):
+        queryset = self.get_queryset()[:3]
+        return Response(self.get_serializer(queryset, many=True).data)
 
     @swagger_auto_schema(manual_parameters=[
             openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
@@ -92,9 +96,14 @@ class FunViewSet(ModelViewSet):
         if pagination:
             serializer = self.get_serializer(pagination, many=True)
             return self.get_paginated_response(serializer.data)
-
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=200)
+        
+    @action(['GET'], detail=False)
+    def top_three(self, request):
+        queryset = self.get_queryset()[:3]
+        return Response(self.get_serializer(queryset, many=True).data)
+    
 class CategoryHotelViewSet(ModelViewSet):
     queryset = Category_hotel.objects.all()
     serializer_class = CategoryHotelSerializer
@@ -104,14 +113,30 @@ class CategoryHotelViewSet(ModelViewSet):
             return [] # то разрешаем всем
         return [IsAdminUser()]
 
+
+
 class HotelViewSet(ModelViewSet):
     queryset = Hotel.objects.all().annotate(rating=Avg('hotel_rating__hotel_rating')).order_by('-hotel_rating')
     serializer_class = HotelSerializer
+    # pagination_class = HotelPagination
+    
     def get_permissions(self):
         if self.action in ['retrieve', 'list', 'search']:
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
-        return [IsAdminUser()]   
+        return [IsAdminUser()]  
+
+    @action(['GET'], detail=False)
+    def top_three(self, request):
+        queryset = self.get_queryset()[:3]
+        return Response(self.get_serializer(queryset, many=True).data)
+    # def get_top_3_hotels_with_most_comments():
+    #     top_3_hotels = Hotel.objects.annotate(num_comments=Count('hotel_comments')).order_by('-num_comments')[:3]
+    #     return top_3_hotels 
+    # def top_hotels_view(request):
+    #     queryset = HotelViewSet.queryset.all()[:3]
+    #     serializer = HotelSerializer(queryset, many=True)
+    #     return Response(serializer.data)  
 
     @swagger_auto_schema(manual_parameters=[
             openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
