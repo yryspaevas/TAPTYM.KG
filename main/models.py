@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Category_place(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,blank=True)
 
     def __str__(self):
         return self.title
@@ -33,8 +33,9 @@ class Place(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='place', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
+    
 
 
     class Meta:
@@ -59,7 +60,7 @@ class Fun(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='fun', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
 
     class Meta:
@@ -85,10 +86,10 @@ class Hotel(models.Model):
     info = models.TextField()
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='hotel', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
-
+    
     class Meta:
         verbose_name = "Размещение"
         verbose_name_plural = "Размещение"
-    
+        
