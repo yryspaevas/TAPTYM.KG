@@ -36,7 +36,10 @@ class Place(models.Model):
     hours = models.TextField(blank=True)
     image = models.ImageField(upload_to='place', blank=True)
     map_link = models.CharField(max_length=255, blank=True)
-    
+    place_link = models.CharField(max_length=255, blank=True)
+    avg_price= models.CharField(max_length=255, blank=True)
+
+
     class Meta:
         verbose_name = "Еда"
         verbose_name_plural = "Еда"
@@ -67,8 +70,11 @@ class Fun(models.Model):
     address = models.CharField(max_length=255)
     hours = models.TextField(blank=True)
     image = models.ImageField(upload_to='fun', blank=True)
-    map_link = models.CharField(max_length=255, blank=True)
-    
+    map_link = models.CharField(max_length=255, blank=True) 
+    fun_link = models.CharField(max_length=255, blank=True)
+
+
+
     class Meta:
         verbose_name = "Развлечение"
         verbose_name_plural = "Развлечения"

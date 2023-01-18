@@ -6,9 +6,13 @@ from rest_framework.viewsets import ModelViewSet
 from .serializers import *
 from .models import *
 from rest_framework.permissions import IsAdminUser
-from rest_framework.response import Response
-from rest_framework.decorators import action
 # from .paginations import HotelPagination
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from django.db.models import Q
+from rest_framework.response import Response
+from rest_framework.decorators import action, api_view
+from rest_framework.pagination import PageNumberPagination
 
 
 class CategoryPlaceViewSet(ModelViewSet):
@@ -42,6 +46,24 @@ class PlaceViewSet(ModelViewSet):
         queryset = self.get_queryset()[:3]
         return Response(self.get_serializer(queryset, many=True).data)
 
+    @swagger_auto_schema(manual_parameters=[
+            openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+        ])
+    @action(['GET'], detail=False)
+    def search(self, request):
+        q = request.query_params.get('q')
+        queryset = self.get_queryset() # Product.objects.all()
+        if q:
+            queryset = queryset.filter(Q(name__icontains=q) | Q(info__icontains=q))
+
+        pagination = self.paginate_queryset(queryset)
+        if pagination:
+            serializer = self.get_serializer(pagination, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+
 class CategoryFunViewSet(ModelViewSet):
     queryset = Category_fun.objects.all()
     serializer_class = CategoryFunSerializer
@@ -59,12 +81,29 @@ class FunViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+    
+    @swagger_auto_schema(manual_parameters=[
+            openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+        ])
+    @action(['GET'], detail=False)
+    def search(self, request):
+        q = request.query_params.get('q')
+        queryset = self.get_queryset() # Product.objects.all()
+        if q:
+            queryset = queryset.filter(Q(name__icontains=q) | Q(info__icontains=q))
 
+        pagination = self.paginate_queryset(queryset)
+        if pagination:
+            serializer = self.get_serializer(pagination, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+        
     @action(['GET'], detail=False)
     def top_three(self, request):
         queryset = self.get_queryset()[:3]
         return Response(self.get_serializer(queryset, many=True).data)
-
+    
 class CategoryHotelViewSet(ModelViewSet):
     queryset = Category_hotel.objects.all()
     serializer_class = CategoryHotelSerializer
@@ -97,4 +136,43 @@ class HotelViewSet(ModelViewSet):
     # def top_hotels_view(request):
     #     queryset = HotelViewSet.queryset.all()[:3]
     #     serializer = HotelSerializer(queryset, many=True)
-    #     return Response(serializer.data)
+    #     return Response(serializer.data)  
+
+    @swagger_auto_schema(manual_parameters=[
+            openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+        ])
+    @action(['GET'], detail=False)
+    def search(self, request):
+        q = request.query_params.get('q')
+        queryset = self.get_queryset() # Product.objects.all()
+        if q:
+            queryset = queryset.filter(Q(name__icontains=q) | Q(info__icontains=q))
+
+        pagination = self.paginate_queryset(queryset)
+        if pagination:
+            serializer = self.get_serializer(pagination, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+
+
+
+@api_view(['GET'])
+def poisk(request):
+    q = request.query_params.get('q')
+    queryset1 = Fun.objects.filter(Q(name__icontains=q) | Q(info__icontains=q))
+    queryset2 = Place.objects.filter(Q(name__icontains=q) | Q(info__icontains=q))
+    queryset3 = Hotel.objects.filter(Q(name__icontains=q) | Q(info__icontains=q))
+    res = []
+    res.extend(FunSerializer(queryset1, many=True).data)
+    res.extend(PlaceSerializer(queryset2, many=True).data)
+    res.extend(HotelSerializer(queryset3, many=True).data)
+
+    paginator = PageNumberPagination()
+    pagination = paginator.paginate_queryset(res, request)
+    if pagination:
+        return paginator.get_paginated_response(pagination)
+    return Response(res)
+
+
