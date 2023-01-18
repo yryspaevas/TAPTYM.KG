@@ -1,8 +1,10 @@
 # from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
-from django.contrib.contenttypes.models import ContentType
+# from django.db.models import Count
+
+# from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+# from django.contrib.contenttypes.models import ContentType
 
 from account.models import User
 from main.models import Place, Fun, Hotel
@@ -22,6 +24,7 @@ class PlaceComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # likes = GenericRelation(Like)
+    
 
     @property
     def total_likes(self):
@@ -66,6 +69,11 @@ class HotelComment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # def get_top_3_hotels_with_most_comments():
+    #     top_3_hotels = Hotel.objects.annotate(num_comments=Count('hotel_comments')).order_by('-num_comments')[:3]
+    #     return top_3_hotels
+
     # likes = GenericRelation(Like)
 
     # @property

@@ -14,4 +14,5 @@ router.register('hotel', HotelViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    # path('top-hotels/', top_hotels_view, name='top_hotels'),
 ]
