@@ -20,6 +20,10 @@ class PlaceComment(models.Model):
 class PlaceCommentLike(models.Model):
     user_place_comment = models.ForeignKey(User, related_name='place_likes', on_delete=models.CASCADE)
     place_comment = models.ForeignKey(PlaceComment, related_name='place_likes', on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name='like_place', blank=True)
+
+    def likes_quantity(self):
+        return self.likes.count()
 
 class FavoritePlace(models.Model):
     user_id = models.ForeignKey(User, related_name='place_favorite', on_delete= models.CASCADE)
@@ -42,6 +46,11 @@ class FunComment(models.Model):
 class FunCommentLike(models.Model):
     user_fun_comment = models.ForeignKey(User, related_name='fun_likes', on_delete=models.CASCADE)
     fun_comment = models.ForeignKey(FunComment, related_name='fun_likes', on_delete=models.CASCADE)
+
+    likes = models.ManyToManyField(User, related_name='like_fun')
+
+    def likes_quantity(self):
+        return self.likes.count()
 
 
 class FavoriteFun(models.Model):
@@ -72,6 +81,10 @@ class HotelCommentLike(models.Model):
     user_comment = models.ForeignKey(User, related_name='hotel_likes', on_delete=models.CASCADE)
     hotel_comment = models.ForeignKey(HotelComment, related_name='hotel_likes', on_delete=models.CASCADE)
    
+    likes = models.ManyToManyField(User, related_name='like_hotel')
+
+    def likes_quantity(self):
+        return self.likes.count()
 
 class FavoriteHotel(models.Model):
     user_id = models.ForeignKey(User, related_name='hotel_favorite', on_delete= models.CASCADE)

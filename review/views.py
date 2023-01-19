@@ -88,6 +88,7 @@ class HotelCommentViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+    
 
 
 
