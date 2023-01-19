@@ -1,8 +1,10 @@
 # from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
-from django.contrib.contenttypes.models import ContentType
+# from django.db.models import Count
+
+# from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+# from django.contrib.contenttypes.models import ContentType
 
 from account.models import User
 from main.models import Place, Fun, Hotel
@@ -21,10 +23,7 @@ class PlaceComment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    likes = models.ManyToManyField(User, related_name='like_place', blank=True)
-
-    def likes_quantity(self):
-        return self.likes.count()
+    
 
 class FavoritePlace(models.Model):
     user_id = models.ForeignKey(User, related_name='place_favorite', on_delete= models.CASCADE)
@@ -43,10 +42,7 @@ class FunComment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    likes = models.ManyToManyField(User, related_name='like_fun')
-
-    def likes_quantity(self):
-        return self.likes.count()
+    
 
 
 class FavoriteFun(models.Model):
@@ -65,10 +61,13 @@ class HotelComment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    likes = models.ManyToManyField(User, related_name='like_hotel')
 
-    def likes_quantity(self):
-        return self.likes.count()
+    # def get_top_3_hotels_with_most_comments():
+    #     top_3_hotels = Hotel.objects.annotate(num_comments=Count('hotel_comments')).order_by('-num_comments')[:3]
+    #     return top_3_hotels
+
+    # likes = GenericRelation(Like)
+
 
 class FavoriteHotel(models.Model):
     user_id = models.ForeignKey(User, related_name='hotel_favorite', on_delete= models.CASCADE)

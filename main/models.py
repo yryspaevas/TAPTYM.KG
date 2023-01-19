@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -43,6 +44,13 @@ class Place(models.Model):
         verbose_name = "Еда"
         verbose_name_plural = "Еда"
 
+    def get_average_rating(self):
+        ratings = self.place_rating.all()
+        values = [i.place_rating for i in ratings]
+        if ratings.exists():
+            return sum(values) // ratings.count()
+        return 0
+
 class Category_fun(models.Model):
     
     title = models.CharField(max_length=255)
@@ -66,9 +74,17 @@ class Fun(models.Model):
     fun_link = models.CharField(max_length=255, blank=True)
 
 
+
     class Meta:
         verbose_name = "Развлечение"
         verbose_name_plural = "Развлечения"
+    
+    def get_average_rating(self):
+        ratings = self.fun_rating.all()
+        values = [i.fun_rating for i in ratings]
+        if ratings.exists():
+            return sum(values) // ratings.count()
+        return 0
 
 
 class Category_hotel(models.Model):
@@ -97,4 +113,10 @@ class Hotel(models.Model):
     class Meta:
         verbose_name = "Размещение"
         verbose_name_plural = "Размещение"
-        
+    
+    def get_average_rating(self):
+        ratings = self.hotel_rating.all()
+        values = [i.hotel_rating for i in ratings]
+        if ratings.exists():
+            return sum(values) // ratings.count()
+        return 0
