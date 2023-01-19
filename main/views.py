@@ -64,6 +64,21 @@ class PlaceViewSet(ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
+    @action(['GET'], detail=False)
+    def filter_place(self, request):
+        cat_id = request.query_params.get('category_id')
+        subcat_id = request.query_params.get('sub_category_id')
+        queryset = self.get_queryset()
+        if cat_id  and subcat_id is not None:
+            queryset = queryset.filter(category_id=cat_id, sub_category_id=subcat_id)
+        pagination = self.paginate_queryset(queryset)
+        if pagination:
+            serializer = self.get_serializer(pagination, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+
+    
 
 class CategoryFunViewSet(ModelViewSet):
     queryset = Category_fun.objects.all()
@@ -104,6 +119,19 @@ class FunViewSet(ModelViewSet):
     def top_three(self, request):
         queryset = self.get_queryset()[:3]
         return Response(self.get_serializer(queryset, many=True).data)
+
+    @action(['GET'], detail=False)
+    def filter_fun(self, request):
+        cat_id = request.query_params.get('category_id')
+        queryset = self.get_queryset()
+        if cat_id is not None:
+            queryset = queryset.filter(category_id=cat_id)
+        pagination = self.paginate_queryset(queryset)
+        if pagination:
+            serializer = self.get_serializer(pagination, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
     
 class CategoryHotelViewSet(ModelViewSet):
     queryset = Category_hotel.objects.all()
@@ -156,7 +184,18 @@ class HotelViewSet(ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=200)
-
+    @action(['GET'], detail=False)
+    def filter_hotel(self, request):
+        cat_id = request.query_params.get('category_id')
+        queryset = self.get_queryset()
+        if cat_id is not None:
+            queryset = queryset.filter(category_id=cat_id)
+        pagination = self.paginate_queryset(queryset)
+        if pagination:
+            serializer = self.get_serializer(pagination, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
 
 
 @api_view(['GET'])
