@@ -64,6 +64,7 @@ class PlaceViewSet(ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
+
 class CategoryFunViewSet(ModelViewSet):
     queryset = Category_fun.objects.all()
     serializer_class = CategoryFunSerializer

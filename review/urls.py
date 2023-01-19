@@ -17,4 +17,5 @@ router.register('hotel_rating', HotelRatingViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+
 ]

@@ -23,12 +23,7 @@ class PlaceComment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # likes = GenericRelation(Like)
     
-
-    @property
-    def total_likes(self):
-        return self.likes.count()
 
 class FavoritePlace(models.Model):
     user_id = models.ForeignKey(User, related_name='place_favorite', on_delete= models.CASCADE)
@@ -47,11 +42,8 @@ class FunComment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # likes = GenericRelation(Like)
+    
 
-    @property
-    def total_likes(self):
-        return self.likes.count()
 
 class FavoriteFun(models.Model):
     user_id = models.ForeignKey(User, related_name='fun_favorite', on_delete= models.CASCADE)
@@ -76,9 +68,6 @@ class HotelComment(models.Model):
 
     # likes = GenericRelation(Like)
 
-    # @property
-    # def total_likes(self):
-    #     return self.likes.count()
 
 class FavoriteHotel(models.Model):
     user_id = models.ForeignKey(User, related_name='hotel_favorite', on_delete= models.CASCADE)

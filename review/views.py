@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 
+
 from .serializers import *
 from .paginations import HotelCommentPagination,FunCommentPagination, PlaceCommentPagination
 # from main.views import HotelViewSet
@@ -24,6 +25,8 @@ class PlaceCommentViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+
+   
 
 class FunCommentViewSet(ModelViewSet):
     queryset = FunComment.objects.all()
@@ -52,6 +55,7 @@ class HotelCommentViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+    
 
 
 class FavoritePlaceViewSet(ModelViewSet):
