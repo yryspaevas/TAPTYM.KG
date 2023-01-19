@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from .serializers import *
 from .paginations import HotelCommentPagination,FunCommentPagination, PlaceCommentPagination
 from .models import *
+from .permissions import IsAuthorOrReadOnly
 # from main.views import HotelViewSet
 # from main.serializers import HotelSerializer
 
@@ -22,7 +23,7 @@ class PlaceCommentViewSet(ModelViewSet):
     
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
+            return [IsAdminUser()]
         elif self.action == 'create':
             return [IsAuthenticatedOrReadOnly()]
         elif self.action in ['retrieve', 'list', 'search']:
@@ -51,7 +52,7 @@ class FunCommentViewSet(ModelViewSet):
     pagination_class = FunCommentPagination
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
+            return [IsAdminUser()]
         elif self.action == 'create':
             return [IsAuthenticatedOrReadOnly()]
         elif self.action in ['retrieve', 'list', 'search']:
@@ -81,7 +82,7 @@ class HotelCommentViewSet(ModelViewSet):
     pagination_class = HotelCommentPagination
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
+            return [IsAdminUser()]
         elif self.action == 'create':
             return [IsAuthenticatedOrReadOnly()]
         elif self.action in ['retrieve', 'list', 'search']:
@@ -111,78 +112,42 @@ class HotelCommentLikeView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, m
 class FavoritePlaceViewSet(ModelViewSet):
     queryset = FavoritePlace.objects.all()
     serializer_class = FavoritePlaceSerializer
-    def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action == 'create':
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action in ['retrieve', 'list', 'search']:
-            # если это запросы на листинг и детализацию
-            return [] # то разрешаем всем
-        return [IsAdminUser()]
+    permission_classes = [IsAuthorOrReadOnly]
 
 class FavoriteFunViewSet(ModelViewSet):
     queryset = FavoriteFun.objects.all()
     serializer_class = FavoriteFunSerializer
-    def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action == 'create':
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action in ['retrieve', 'list', 'search']:
-            # если это запросы на листинг и детализацию
-            return [] # то разрешаем всем
-        return [IsAdminUser()]
+    permission_classes = [IsAuthorOrReadOnly]
 
 class FavoriteHotelViewSet(ModelViewSet):
     queryset = FavoriteHotel.objects.all()
     serializer_class = FavoriteHotelSerializer
-    def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action == 'create':
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action in ['retrieve', 'list', 'search']:
-            # если это запросы на листинг и детализацию
-            return [] # то разрешаем всем
-        return [IsAdminUser()]
+    permission_classes = [IsAuthorOrReadOnly]
 
 class PlaceRatingViewSet(ModelViewSet):
     queryset = PlaceRating.objects.all()
     serializer_class = PlaceRatingSerializer
     def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action == 'create':
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action in ['retrieve', 'list', 'search']:
+        if self.action in ['retrieve', 'list', 'search']:
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
-        return [IsAdminUser()]
+        return [IsAuthorOrReadOnly()]
 
 class FunRatingViewSet(ModelViewSet):
     queryset = FunRating.objects.all()
     serializer_class = FunRatingSerializer
     def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action == 'create':
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action in ['retrieve', 'list', 'search']:
+        if self.action in ['retrieve', 'list', 'search']:
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
-        return [IsAdminUser()]
+        return [IsAuthorOrReadOnly()]
 
 class HotelRatingViewSet(ModelViewSet):
     queryset = HotelRating.objects.all()
     serializer_class = HotelRatingSerializer
     def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action == 'create':
-            return [IsAuthenticatedOrReadOnly()]
-        elif self.action in ['retrieve', 'list', 'search']:
+        if self.action in ['retrieve', 'list', 'search']:
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
-        return [IsAdminUser()]
+        return [IsAuthorOrReadOnly]
 
