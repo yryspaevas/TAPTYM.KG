@@ -16,6 +16,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
 from rest_framework.pagination import PageNumberPagination
 
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
 
 
 
@@ -40,6 +43,11 @@ class SubCategoryPlaceViewSet(ModelViewSet):
 class PlaceViewSet(ModelViewSet):
     queryset = Place.objects.all().annotate(rating=Avg('place_rating__place_rating')).order_by('-place_rating')
     serializer_class = PlaceSerializer
+
+    @method_decorator(cache_page(60 * 15))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def get_permissions(self):
         if self.action in ['retrieve', 'list', 'search']:
             # если это запросы на листинг и детализацию
@@ -96,6 +104,12 @@ class CategoryFunViewSet(ModelViewSet):
 class FunViewSet(ModelViewSet):
     queryset = Fun.objects.all().annotate(rating=Avg('fun_rating__fun_rating')).order_by('-fun_rating')
     serializer_class = FunSerializer
+
+    @method_decorator(cache_page(60 * 15))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
     def get_permissions(self):
         if self.action in ['retrieve', 'list', 'search']:
             # если это запросы на листинг и детализацию
@@ -136,6 +150,10 @@ class HotelViewSet(ModelViewSet):
     serializer_class = HotelSerializer
     # pagination_class = HotelPagination
     
+    @method_decorator(cache_page(60 * 15))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def get_permissions(self):
         if self.action in ['retrieve', 'list', 'search']:
             # если это запросы на листинг и детализацию
