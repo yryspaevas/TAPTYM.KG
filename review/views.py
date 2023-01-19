@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 
+
 from .serializers import *
 
 # Create your views here.
@@ -20,6 +21,8 @@ class PlaceCommentViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+
+   
 
 class FunCommentViewSet(ModelViewSet):
     queryset = FunComment.objects.all()
@@ -46,6 +49,7 @@ class HotelCommentViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+    
 
 class FavoritePlaceViewSet(ModelViewSet):
     queryset = FavoritePlace.objects.all()
