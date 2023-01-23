@@ -49,6 +49,6 @@ def activate_view(request, activation_code):
     user.is_active = True # делаем активным
     user.activation_code = '' # удаляем активационный код
     user.save()
-    return Response('Вы успешно активировали аккаунт', status=200)
+    return redirect('http://127.0.0.1:3000') #чекнуууть нада 
 
         

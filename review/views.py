@@ -48,10 +48,12 @@ class PlaceCommentViewSet(ModelViewSet):
 class PlaceCommentLikeView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,generics.GenericAPIView):
     queryset = PlaceCommentLike.objects.all()
     serializer_class = PlaceCommentLikeSerializer
-
+    print("query",queryset)
     def get(self, request, pk):
         user = request.user
+        
         comment = get_object_or_404(PlaceComment, id=pk)
+        
 
         if PlaceCommentLike.objects.filter(user_place_comment=user, place_comment=comment).exists():
             PlaceCommentLike.objects.filter(user_place_comment=user, place_comment=comment).delete()
