@@ -6,8 +6,6 @@ from rest_framework.viewsets import ModelViewSet
 from .serializers import *
 from .models import *
 from rest_framework.permissions import IsAdminUser
-from rest_framework.response import Response
-from rest_framework.decorators import action
 # from .paginations import HotelPagination
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -18,7 +16,6 @@ from rest_framework.pagination import PageNumberPagination
 
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
-
 
 
 
@@ -115,7 +112,24 @@ class FunViewSet(ModelViewSet):
             # если это запросы на листинг и детализацию
             return [] # то разрешаем всем
         return [IsAdminUser()]
+    
+    @swagger_auto_schema(manual_parameters=[
+            openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+        ])
+    @action(['GET'], detail=False)
+    def search(self, request):
+        q = request.query_params.get('q')
+        queryset = self.get_queryset() # Product.objects.all()
+        if q:
+            queryset = queryset.filter(Q(name__icontains=q) | Q(info__icontains=q))
 
+        pagination = self.paginate_queryset(queryset)
+        if pagination:
+            serializer = self.get_serializer(pagination, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+        
     @action(['GET'], detail=False)
     def top_three(self, request):
         queryset = self.get_queryset()[:3]
@@ -176,12 +190,18 @@ class HotelViewSet(ModelViewSet):
     @swagger_auto_schema(manual_parameters=[
         openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
     ])
+    #     return Response(serializer.data)  
+
+    @swagger_auto_schema(manual_parameters=[
+            openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+        ])
     @action(['GET'], detail=False)
     def search(self, request):
         q = request.query_params.get('q')
         queryset = self.get_queryset() # Product.objects.all()
         if q:
-            queryset = queryset.filter(Q(title__icontains=q))
+
+            queryset = queryset.filter(Q(name__icontains=q) | Q(info__icontains=q))
 
         pagination = self.paginate_queryset(queryset)
         if pagination:

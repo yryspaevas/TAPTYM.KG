@@ -4,6 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework import mixins, generics
 from rest_framework.decorators import api_view
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 from rest_framework.response import Response
 from django.views.decorators.cache import cache_page
@@ -17,6 +19,7 @@ from .paginations import HotelCommentPagination,FunCommentPagination, PlaceComme
 from .models import *
 from .permissions import IsAuthorOrReadOnly
 from .models import *
+from .permissions import IsAuthorOrReadOnly
 # from main.views import HotelViewSet
 # from main.serializers import HotelSerializer
 
@@ -56,6 +59,7 @@ class PlaceCommentLikeView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, m
         else:
             PlaceCommentLike.objects.create(user_place_comment=user, place_comment=comment)
             return Response("Liked", 200)
+   
 
 class FunCommentViewSet(ModelViewSet):
     queryset = FunComment.objects.all()
