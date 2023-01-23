@@ -41,7 +41,7 @@ class PlaceViewSet(ModelViewSet):
     queryset = Place.objects.all().annotate(rating=Avg('place_rating__place_rating')).order_by('-place_rating')
     serializer_class = PlaceSerializer
 
-    @method_decorator(cache_page(60 * 15))
+    # @method_decorator(cache_page(60 * 15))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -102,7 +102,7 @@ class FunViewSet(ModelViewSet):
     queryset = Fun.objects.all().annotate(rating=Avg('fun_rating__fun_rating')).order_by('-fun_rating')
     serializer_class = FunSerializer
 
-    @method_decorator(cache_page(60 * 15))
+    # @method_decorator(cache_page(60 * 15))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -164,7 +164,7 @@ class HotelViewSet(ModelViewSet):
     serializer_class = HotelSerializer
     # pagination_class = HotelPagination
     
-    @method_decorator(cache_page(60 * 15))
+    # @method_decorator(cache_page(60 * 15))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -187,9 +187,9 @@ class HotelViewSet(ModelViewSet):
     #     return Response(serializer.data)
         return [IsAdminUser()]   
 
-    @swagger_auto_schema(manual_parameters=[
-        openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
-    ])
+    # @swagger_auto_schema(manual_parameters=[
+    #     openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    # ])
     #     return Response(serializer.data)  
 
     @swagger_auto_schema(manual_parameters=[
