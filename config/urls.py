@@ -36,6 +36,10 @@ urlpatterns = [
     path('', include('main.urls')),
     path('', include('review.urls')),
     
+<<<<<<< HEAD
+=======
+
+>>>>>>> d05ef11 (search all)
 ]
 
 from django.conf import settings

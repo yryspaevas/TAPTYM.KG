@@ -18,6 +18,7 @@ from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 
 
+
 class CategoryPlaceViewSet(ModelViewSet):
     queryset = Category_place.objects.all()
     serializer_class = CategoryPlaceSerializer
@@ -183,6 +184,12 @@ class HotelViewSet(ModelViewSet):
     # def top_hotels_view(request):
     #     queryset = HotelViewSet.queryset.all()[:3]
     #     serializer = HotelSerializer(queryset, many=True)
+    #     return Response(serializer.data)
+        return [IsAdminUser()]   
+
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    ])
     #     return Response(serializer.data)  
 
     @swagger_auto_schema(manual_parameters=[
@@ -193,6 +200,7 @@ class HotelViewSet(ModelViewSet):
         q = request.query_params.get('q')
         queryset = self.get_queryset() # Product.objects.all()
         if q:
+
             queryset = queryset.filter(Q(name__icontains=q) | Q(info__icontains=q))
 
         pagination = self.paginate_queryset(queryset)

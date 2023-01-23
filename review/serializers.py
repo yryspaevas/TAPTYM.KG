@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import serializers
 from account.models import User
 from .models import *
@@ -15,6 +16,17 @@ class PlaceCommentSerializer(serializers.ModelSerializer):
         reply = PlaceComment.objects.create(user_id=request.user, **validated_data)
         return reply
 
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        # rep["place_likes"] = PlaceCommentLikeSerializer(instance.place_likes.all(), many=True).data
+        rep["place_likes"] = instance.place_likes.all().count()
+        return rep
+
+class PlaceCommentLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlaceCommentLike
+        fields = '__all__'
+
 
 class FunCommentSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField(source='user_id.email')
@@ -28,9 +40,22 @@ class FunCommentSerializer(serializers.ModelSerializer):
         reply = FunComment.objects.create(user_id=request.user, **validated_data)
         return reply
 
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        # rep["fun_likes"] = FunCommentLikeSerializer(instance.fun_likes.all(), many=True).data
+        rep["fun_likes"] = instance.fun_likes.all().count()
+        return rep
+
+class FunCommentLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FunCommentLike
+        fields = '__all__'
+
 
 class HotelCommentSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField(source='user_id.email')
+    # hotel_comment_likes_count = serializers.SerializerMethodField()
+    # hotel_comment_dislikes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = HotelComment
@@ -40,6 +65,27 @@ class HotelCommentSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         reply = HotelComment.objects.create(user_id=request.user, **validated_data)
         return reply
+
+    # def create_hotel_comment(self, validated data):
+
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        # rep["hotel_li"] = HotelCommentLikeSerializer(instance.hotel_likes.all(), many=True).data
+        rep["hotel_likes"] = instance.hotel_likes.all().count()
+        return rep
+    
+
+class HotelCommentLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HotelCommentLike
+        fields = '__all__'
+    
+
+# class HotelCommentDislikeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = HotelCommentDislike
+#         fields = '__all__'
 
 
 class FavoritePlaceSerializer(serializers.ModelSerializer):

@@ -1,11 +1,24 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework import mixins, generics
+from rest_framework.decorators import api_view
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 
+from rest_framework.response import Response
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from rest_framework import mixins, generics
+from rest_framework.decorators import api_view
+
+from rest_framework.response import Response
 from .serializers import *
 from .paginations import HotelCommentPagination,FunCommentPagination, PlaceCommentPagination
+from .models import *
+from .permissions import IsAuthorOrReadOnly
+from .models import *
 from .permissions import IsAuthorOrReadOnly
 # from main.views import HotelViewSet
 # from main.serializers import HotelSerializer
@@ -32,6 +45,20 @@ class PlaceCommentViewSet(ModelViewSet):
             return [] # то разрешаем всем
         return [IsAdminUser()]
 
+class PlaceCommentLikeView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset = PlaceCommentLike.objects.all()
+    serializer_class = PlaceCommentLikeSerializer
+
+    def get(self, request, pk):
+        user = request.user
+        comment = get_object_or_404(PlaceComment, id=pk)
+
+        if PlaceCommentLike.objects.filter(user_place_comment=user, place_comment=comment).exists():
+            PlaceCommentLike.objects.filter(user_place_comment=user, place_comment=comment).delete()
+            return Response ('Like has been deleted')
+        else:
+            PlaceCommentLike.objects.create(user_place_comment=user, place_comment=comment)
+            return Response("Liked", 200)
    
 
 class FunCommentViewSet(ModelViewSet):
@@ -53,6 +80,22 @@ class FunCommentViewSet(ModelViewSet):
             return [] # то разрешаем всем
         return [IsAdminUser()]
 
+class FunCommentLikeView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset = FunCommentLike.objects.all()
+    serializer_class = FunCommentLikeSerializer
+
+    def get(self, request, pk):
+        user = request.user
+        comment = get_object_or_404(FunComment, id=pk)
+
+        if FunCommentLike.objects.filter(user_fun_comment=user, fun_comment=comment).exists():
+            FunCommentLike.objects.filter(user_fun_comment=user, fun_comment=comment).delete()
+            return Response ('Like has been deleted')
+        else:
+            FunCommentLike.objects.create(user_fun_comment=user, fun_comment=comment)
+            return Response("Liked", 200)
+
+
 class HotelCommentViewSet(ModelViewSet):
     queryset = HotelComment.objects.all()
     serializer_class = HotelCommentSerializer
@@ -72,6 +115,23 @@ class HotelCommentViewSet(ModelViewSet):
             return [] # то разрешаем всем
         return [IsAdminUser()]
     
+
+
+
+class HotelCommentLikeView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset = HotelCommentLike.objects.all()
+    serializer_class = HotelCommentLikeSerializer
+
+    def get(self, request, pk):
+        user = request.user
+        comment = get_object_or_404(HotelComment, id=pk)
+
+        if HotelCommentLike.objects.filter(user_comment=user, hotel_comment=comment).exists():
+            HotelCommentLike.objects.filter(user_comment=user, hotel_comment=comment).delete()
+            return Response ('Like has been deleted')
+        else:
+            HotelCommentLike.objects.create(user_comment=user, hotel_comment=comment)
+            return Response("Liked", 200)
 
 
 class FavoritePlaceViewSet(ModelViewSet):
