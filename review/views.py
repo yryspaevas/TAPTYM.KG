@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import mixins, generics
 from rest_framework.decorators import api_view
 from django.views.decorators.cache import cache_page
@@ -137,17 +137,65 @@ class HotelCommentLikeView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, m
 class FavoritePlaceViewSet(ModelViewSet):
     queryset = FavoritePlace.objects.all()
     serializer_class = FavoritePlaceSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated]
+
+    def filter_queryset(self, queryset):
+        new_queryset = queryset.filter(user=self.request.user)
+        return new_queryset
+
+@api_view(['POST'])
+def add_favorite_place(request, place_id):
+    user = request.user
+    place = get_object_or_404(Place, id=place_id)
+
+    if FavoritePlace.objects.filter(user=user, favorite=place).exists():
+        FavoritePlace.objects.filter(user=user, favorite=place).delete()
+        return Response('Deleted from favorite')
+    else:
+        FavoritePlace.objects.create(user=user, favorite=place, favorite_place=True)
+        return Response('Added to favorites')
 
 class FavoriteFunViewSet(ModelViewSet):
     queryset = FavoriteFun.objects.all()
     serializer_class = FavoriteFunSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated]
+
+    def filter_queryset(self, queryset):
+        new_queryset = queryset.filter(user=self.request.user)
+        return new_queryset
+
+@api_view(['POST'])
+def add_favorite_fun(request, fun_id):
+    user = request.user
+    fun = get_object_or_404(Fun, id=fun_id)
+
+    if FavoriteFun.objects.filter(user=user, favorite=fun).exists():
+        FavoriteFun.objects.filter(user=user, favorite=fun).delete()
+        return Response('Deleted from favorite')
+    else:
+        FavoriteFun.objects.create(user=user, favorite=fun, favorite_fun=True)
+        return Response('Added to favorites')
 
 class FavoriteHotelViewSet(ModelViewSet):
     queryset = FavoriteHotel.objects.all()
     serializer_class = FavoriteHotelSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated]
+
+    def filter_queryset(self, queryset):
+        new_queryset = queryset.filter(user=self.request.user)
+        return new_queryset
+
+@api_view(['POST'])
+def add_favorite_hotel(request, hotel_id):
+    user = request.user
+    hotel = get_object_or_404(Hotel, id=hotel_id)
+
+    if FavoriteHotel.objects.filter(user=user, favorite=hotel).exists():
+        FavoriteHotel.objects.filter(user=user, favorite=hotel).delete()
+        return Response('Deleted from favorite')
+    else:
+        FavoriteHotel.objects.create(user=user, favorite=hotel, favorite_hotel=True)
+        return Response('Added to favorites')
 
 class PlaceRatingViewSet(ModelViewSet):
     queryset = PlaceRating.objects.all()

@@ -94,6 +94,13 @@ class FavoritePlaceSerializer(serializers.ModelSerializer):
         model = FavoritePlace
         fields = '__all__'
 
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        request = self.context.get('request')
+        attrs['user'] = request.user
+
+        return attrs
+
     # def to_representation(self, instance):
     #     representation = super().to_representation(instance)
     #     representation['user'] = instance.user.email
@@ -112,11 +119,25 @@ class FavoriteFunSerializer(serializers.ModelSerializer):
     #     representation['fun'] = instance.fun.title
     #     return representation
 
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        request = self.context.get('request')
+        attrs['user'] = request.user
+
+        return attrs
+
 class FavoriteHotelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavoriteHotel
         fields = '__all__'
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        request = self.context.get('request')
+        attrs['user'] = request.user
+
+        return attrs
 
 
 class PlaceRatingSerializer(serializers.ModelSerializer):

@@ -187,9 +187,7 @@ class HotelViewSet(ModelViewSet):
     #     return Response(serializer.data)
         return [IsAdminUser()]   
 
-    @swagger_auto_schema(manual_parameters=[
-        openapi.Parameter('q', openapi.IN_QUERY, type=openapi.TYPE_STRING)
-    ])
+    
     #     return Response(serializer.data)  
 
     @swagger_auto_schema(manual_parameters=[
