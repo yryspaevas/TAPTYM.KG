@@ -40,7 +40,7 @@ class Place(models.Model):
     avg_price= models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
     class Meta:
         verbose_name = "Еда"
@@ -76,7 +76,7 @@ class Fun(models.Model):
     fun_link = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
     class Meta:
         verbose_name = "Развлечение"
@@ -114,7 +114,7 @@ class Hotel(models.Model):
     price = models.CharField(max_length=255, blank=True)
     
     def __str__(self):
-        return self.title
+        return self.name
 
     class Meta:
         verbose_name = "Размещение"
