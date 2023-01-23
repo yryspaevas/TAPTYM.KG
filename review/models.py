@@ -66,11 +66,11 @@ class FunRating(models.Model):
     fun_id = models.ForeignKey(Fun, on_delete=models.CASCADE, related_name='fun_rating')
     fun_rating = models.IntegerField(choices=[(1,1),(2,2),(3,3),(4,4),(5,5)], default=0)
 
-class HotelCommentLike(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='hotel_likes', on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+# class HotelCommentLike(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='hotel_likes', on_delete=models.CASCADE)
+#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+#     object_id = models.PositiveIntegerField()
+#     content_object = GenericForeignKey('content_type', 'object_id')
 
 class HotelComment(models.Model):
     user_id = models.ForeignKey(User, related_name='hotel_comments',on_delete=models.CASCADE)
@@ -80,14 +80,14 @@ class HotelComment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
    
 
-# class HotelCommentLike(models.Model):
-#     user_comment = models.ForeignKey(User, related_name='hotel_comment_likes', on_delete=models.CASCADE)
-#     hotel_comment = models.ForeignKey(HotelComment, related_name='hotel_comment_likes', on_delete=models.CASCADE)
+class HotelCommentLike(models.Model):
+    user_comment = models.ForeignKey(User, related_name='hotel_comment_likes', on_delete=models.CASCADE)
+    hotel_comment = models.ForeignKey(HotelComment, related_name='hotel_comment_likes', on_delete=models.CASCADE)
    
-#     # likes = models.ManyToManyField(User, related_name='like_hotel')
+    # likes = models.ManyToManyField(User, related_name='like_hotel')
 
-    # def likes_quantity(self):
-    #     return self.objects.count()
+    def likes_quantity(self):
+        return self.objects.count()
    
 
 class FavoriteHotel(models.Model):
