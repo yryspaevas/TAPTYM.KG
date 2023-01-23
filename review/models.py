@@ -9,13 +9,6 @@ from django.db import models
 from account.models import User
 from main.models import Place, Fun, Hotel
 
-# User = get_user_model()
-
-# class Like(models.Model):
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='likes', on_delete=models.CASCADE)
-#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-#     object_id = models.PositiveIntegerField()
-#     content_object = GenericForeignKey('content_type', 'object_id')
 
 class PlaceComment(models.Model):
     user_id = models.ForeignKey(User, related_name='place_comments',on_delete=models.CASCADE)
@@ -23,12 +16,10 @@ class PlaceComment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # likes = GenericRelation(Like)
-    
 
-    @property
-    def total_likes(self):
-        return self.likes.count()
+class PlaceCommentLike(models.Model):
+    user_place_comment = models.ForeignKey(User, related_name='place_likes', on_delete=models.CASCADE)
+    place_comment = models.ForeignKey(PlaceComment, related_name='place_likes', on_delete=models.CASCADE)
 
 class FavoritePlace(models.Model):
     user_id = models.ForeignKey(User, related_name='place_favorite', on_delete= models.CASCADE)
@@ -47,11 +38,11 @@ class FunComment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # likes = GenericRelation(Like)
+ 
+class FunCommentLike(models.Model):
+    user_fun_comment = models.ForeignKey(User, related_name='fun_likes', on_delete=models.CASCADE)
+    fun_comment = models.ForeignKey(FunComment, related_name='fun_likes', on_delete=models.CASCADE)
 
-    @property
-    def total_likes(self):
-        return self.likes.count()
 
 class FavoriteFun(models.Model):
     user_id = models.ForeignKey(User, related_name='fun_favorite', on_delete= models.CASCADE)
@@ -63,22 +54,24 @@ class FunRating(models.Model):
     fun_id = models.ForeignKey(Fun, on_delete=models.CASCADE, related_name='fun_rating')
     fun_rating = models.IntegerField(choices=[(1,1),(2,2),(3,3),(4,4),(5,5)], default=0)
 
+# class HotelCommentLike(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='hotel_likes', on_delete=models.CASCADE)
+#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+#     object_id = models.PositiveIntegerField()
+#     content_object = GenericForeignKey('content_type', 'object_id')
+
 class HotelComment(models.Model):
     user_id = models.ForeignKey(User, related_name='hotel_comments',on_delete=models.CASCADE)
     hotel_id = models.ForeignKey(Hotel,related_name='hotel_comments',on_delete=models.CASCADE)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+   
 
-    # def get_top_3_hotels_with_most_comments():
-    #     top_3_hotels = Hotel.objects.annotate(num_comments=Count('hotel_comments')).order_by('-num_comments')[:3]
-    #     return top_3_hotels
-
-    # likes = GenericRelation(Like)
-
-    # @property
-    # def total_likes(self):
-    #     return self.likes.count()
+class HotelCommentLike(models.Model):
+    user_comment = models.ForeignKey(User, related_name='hotel_likes', on_delete=models.CASCADE)
+    hotel_comment = models.ForeignKey(HotelComment, related_name='hotel_likes', on_delete=models.CASCADE)
+   
 
 class FavoriteHotel(models.Model):
     user_id = models.ForeignKey(User, related_name='hotel_favorite', on_delete= models.CASCADE)

@@ -20,7 +20,7 @@ class PlaceSerializer(ModelSerializer):
     
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['place_comments'] = PlaceCommentSerializer(instance.fun_comments.all(), many=True).data
+        representation['place_comments'] = PlaceCommentSerializer(instance.place_comments.all(), many=True).data
         representation['place_rating'] = instance.get_average_rating()
         return representation
 
