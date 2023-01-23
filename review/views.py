@@ -8,11 +8,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from rest_framework import mixins, generics
+from rest_framework.decorators import api_view
 
+from rest_framework.response import Response
 from .serializers import *
 from .paginations import HotelCommentPagination,FunCommentPagination, PlaceCommentPagination
 from .models import *
 from .permissions import IsAuthorOrReadOnly
+from .models import *
 # from main.views import HotelViewSet
 # from main.serializers import HotelSerializer
 
