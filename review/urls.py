@@ -22,5 +22,7 @@ urlpatterns = [
     path('hotel_likes/<int:pk>/', HotelCommentLikeView.as_view()),
     path('fun_likes/<int:pk>/', FunCommentLikeView.as_view()),
     path('place_likes/<int:pk>/', PlaceCommentLikeView.as_view()),
-
+    path('add_favorite_place/<int:place_id>/', add_favorite_place),
+    path('add_favorite_fun/<int:fun_id>/', add_favorite_fun),
+    path('add_favorite_hotel/<int:hotel_id>/', add_favorite_hotel),
 ]
