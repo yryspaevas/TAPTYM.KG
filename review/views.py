@@ -20,8 +20,8 @@ from .models import *
 from .permissions import IsAuthorOrReadOnly
 from .models import *
 from .permissions import IsAuthorOrReadOnly
-# from main.views import HotelViewSet
-# from main.serializers import HotelSerializer
+from main.views import HotelViewSet
+from main.serializers import HotelSerializer
 
 # Create your views here.
 
